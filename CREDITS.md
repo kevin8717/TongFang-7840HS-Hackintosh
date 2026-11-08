@@ -14,8 +14,6 @@
 | `PhxBringup.kext` | [luuumi-dev/nullarc](https://github.com/luuumi-dev/nullarc)<br>本机取自 [nerux-real/nullarc-760M](https://github.com/nerux-real/nullarc-760M) | 多许可：MIT / GPL-2.0 / PolyForm Noncommercial（按组件） | 仅配置层：PCI ID `0x15bf1002` 匹配、`phxdebug=1`、构建 33 |
 | `PhxAccel.kext`（`/L/E`，不在 EFI 内） | 同上 | 同上（`src/phxaccel` 为 PolyForm Noncommercial） | 无 |
 | `NVMTLDriver.bundle` | 同上 | PolyForm Noncommercial | 曾修改 `-[NVMTLTexture usage]`（已按用户要求停止） |
-| `WhateverGreen.kext` | [acidanthera/WhateverGreen](https://github.com/acidanthera/WhateverGreen) | BSD-3-Clause | 无（已禁用） |
-| `NootedRed.kext` | [ChefKissInc/NootedRed](https://github.com/ChefKissInc/NootedRed) | 见上游（NOASSERTION） | 无（已禁用） |
 
 > nullarc 的许可证说明：`src/phxbringup`、`tools/*` 为 MIT 或 GPL-2.0；`src/phxaccel`、`src/nmplugin`、
 > `tools/nvmtl-patches` 为 PolyForm Noncommercial 1.0.0（源自 NullMoth 的 macOS 驱动）；`mesa-patches-phoenix` 为 MIT。
@@ -43,7 +41,6 @@
 |---|---|---|---|
 | `PhxXhciKick.kext` 1.0.0 | 思路来自 [thanhnndev/ga403wm-hackintosh](https://github.com/thanhnndev/ga403wm-hackintosh) 的 `docs/USB-XHCI-LAG.md`（`ItlXhciKick`） | 本项目 MIT（实现部分） | **本地独立实现**（`_work/s8-interrupt-kick/PhxXhciKick.cpp`） |
 | `USBPorts.kext` | 本地生成 | 本项目 MIT | **本地编写**（端口映射） |
-| `USBInjectAll.kext` | [RehabMan/USBInjectAll](https://github.com/RehabMan/USBInjectAll)（原仓库已归档/不可用） | 见上游 | 无（已禁用） |
 | `VoodooPS2Controller.kext` 2.3.8 | [acidanthera/VoodooPS2](https://github.com/acidanthera/VoodooPS2) | 见上游（NOASSERTION） | 无 |
 | `VoodooI2C.kext` 2.9.1 | [alexandred/VoodooI2C](https://github.com/alexandred/VoodooI2C) | GPL-3.0 | 本机分支 [kevin8717/VoodooI2C-htix5288](https://github.com/kevin8717/VoodooI2C-htix5288) |
 | `VoodooGPIO.kext`（插件） | 同上 | GPL-3.0 | **本地补丁**：spurious IRQ 掩码位（`INTERRUPT_MASK_OFF`）修正 |
@@ -62,9 +59,6 @@
 | `RestrictEvents.kext` 1.1.7 | [acidanthera/RestrictEvents](https://github.com/acidanthera/RestrictEvents) | BSD-3-Clause | 无 |
 | `AppleMCEReporterDisabler.kext` 1.2 | [xlnc/AppleMCEReporterDisabler](https://github.com/xlnc/AppleMCEReporterDisabler) | 见上游 | 无 |
 | `SSDT-BAT.aml` | — | 本项目 MIT | **本地编写**（基于原始 DSDT 的 `_BIX`/`_BST` 重写） |
-| `AMDRyzenCPUPowerManagement.kext` 0.7.2 | [trulyspinach/AMDRyzenCPUPowerManagement](https://github.com/trulyspinach/AMDRyzenCPUPowerManagement) | 见上游 | 无（已禁用） |
-| `SMCAMDProcessor.kext` 1.0.1 | [trulyspinach/SMCAMDProcessor](https://github.com/trulyspinach/SMCAMDProcessor) | BSD-3-Clause | 无（已禁用） |
-| `BrightnessKeys.kext` 1.0.3 | [acidanthera/BrightnessKeys](https://github.com/acidanthera/BrightnessKeys) | BSD-3-Clause | 无（已禁用） |
 
 ## 6. 引导 / ACPI
 

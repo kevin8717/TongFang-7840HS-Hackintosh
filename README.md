@@ -17,7 +17,7 @@
 | 机型 | 同方（TongFang）AMD 笔记本，16 英寸级 |
 | CPU | AMD Ryzen 7 7840HS（8C/16T，Zen 4，3.8 GHz 基频） |
 | iGPU | AMD Radeon 780M（`1002:15BF`，RDNA3，12 CU） |
-| 独显 | 无（或已禁用，见 ACPI） |
+| 独显 | 无 |
 | 内存 | 32 GB DDR5 |
 | 屏幕 | 2880×1800 内建屏，HiDPI 1440×900 @ 120 Hz |
 | 音频 Codec | Conexant SN6140（`14F1:1F87`，即 ALC257 系列） |
@@ -30,7 +30,7 @@
 
 ## 2. 驱动现状
 
-图例：✅ 正常　⚠️ 部分可用/有已知缺陷　❌ 不可用　⏸️ 已禁用
+图例：✅ 正常　⚠️ 部分可用/有已知缺陷　❌ 不可用
 
 ### 2.1 核心
 
@@ -52,7 +52,6 @@
 | HiDPI | ✅ | 1440×900 逻辑分辨率 |
 | 外接显示 | ⚠️ | 未充分验证 |
 | Photo Booth 主窗口合成 | ❌ | 菜单栏预览/拍照正常，主窗口黑屏；崩溃于 `radv_compute_pipeline_create`（RADV 未检查 `radv_shader_create` 返回 NULL）。**已停止跟进** |
-| NootedRed / WhateverGreen | ⏸️ | 已禁用，780M 走 `PhxBringup`（nullarc） |
 
 ### 2.3 音频
 
@@ -105,9 +104,9 @@ EFI/
 ├── BOOT/
 │   └── BOOTx64.efi
 └── OC/
-    ├── ACPI/            # SSDT（EC/USB、PLUG、ENTP、PHXBKL、BAT）
+    ├── ACPI/            # SSDT（EC/USB、PLUG、ENTP、PHXBKL、BAT，共 5 个）
     ├── Drivers/         # OpenRuntime / OpenCanopy / HfsPlus / ResetNvramEntry / apfs_aligned
-    ├── Kexts/           # 30 个 kext（来源见 CREDITS.md）
+    ├── Kexts/           # 19 个 kext（来源见 CREDITS.md）
     ├── Resources/       # OpenCanopy 主题与音频
     ├── Tools/
     ├── OpenCore.efi
@@ -159,9 +158,8 @@ networksetup -getmacaddress en0     # 或 ioreg -l | grep IOMACAddress
 - **AirportMtkWlan** — [Arxusion/AirportMtkWlan](https://github.com/Arxusion/AirportMtkWlan)（GPL-2.0），本机在其基础上做了 3 处修正 + 1 处移植
 - **SimpleHDA / SimpleMtkBtFw / SimpleMtkBtPatcher** — [laobamac](https://github.com/laobamac)（GPL-3.0）
 - **VoodooI2C 全家** — [alexandred/VoodooI2C](https://github.com/alexandred/VoodooI2C)（GPL-3.0），本机分支 [kevin8717/VoodooI2C-htix5288](https://github.com/kevin8717/VoodooI2C-htix5288)
-- **Acidanthera** — OpenCore、Lilu、VirtualSMC、AppleALC、WhateverGreen、RestrictEvents、BrightnessKeys、VoodooPS2、VoodooInput
+- **Acidanthera** — OpenCore、Lilu、VirtualSMC、AppleALC、RestrictEvents、VoodooPS2、VoodooInput
 - **xHCI ring1 中断思路** — [thanhnndev/ga403wm-hackintosh](https://github.com/thanhnndev/ga403wm-hackintosh) 的 `docs/USB-XHCI-LAG.md`（`ItlXhciKick`），本机按该思路独立实现为 `PhxXhciKick`
-- **NootedRed** — [ChefKissInc/NootedRed](https://github.com/ChefKissInc/NootedRed)（本机已禁用，仅保留）
 
 本地自行编写/修改的部分（不声称上游工作）：
 
