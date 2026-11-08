@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# OpenCore logs
+*.log
+opencore-*.txt
+
+# Local backups / experiments
+*.bak
+*.bak-*
+*.old
+*.orig
+*.disabled-*
+
+# Filled-in personal config (never commit)
+config.plist.local
+config-personal.plist
