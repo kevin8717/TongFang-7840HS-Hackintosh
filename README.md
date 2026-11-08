@@ -47,12 +47,12 @@
 
 | 组件 | 状态 | 说明 |
 |---|---|---|
-| Radeon 780M 加速 | ✅ | 自研 `PhxBringup.kext`（Metal 3，4 GB VRAM，内建屏 2880×1800@120Hz） |
+| Radeon 780M 加速 | ✅ | `PhxBringup.kext`，来自 [nullarc](https://github.com/luuumi-dev/nullarc)（Metal 3，4 GB VRAM，内建屏 2880×1800@120Hz） |
 | 亮度调节 | ✅ | 用户态 `phxbacklight-bridge` + `BL_PWM_CNTL`（不在本 EFI 内） |
 | HiDPI | ✅ | 1440×900 逻辑分辨率 |
 | 外接显示 | ⚠️ | 未充分验证 |
 | Photo Booth 主窗口合成 | ❌ | 菜单栏预览/拍照正常，主窗口黑屏；崩溃于 `radv_compute_pipeline_create`（RADV 未检查 `radv_shader_create` 返回 NULL）。**已停止跟进** |
-| NootedRed / WhateverGreen | ⏸️ | 已禁用，780M 走自研 `PhxBringup` |
+| NootedRed / WhateverGreen | ⏸️ | 已禁用，780M 走 `PhxBringup`（nullarc） |
 
 ### 2.3 音频
 
@@ -79,7 +79,7 @@
 | XHCI USB 2.0/3.x | ✅ | `PhxXhciKick` 修复 ring 1 中断导致的 2 s 输入延迟 |
 | USB 端口映射 | ✅ | `USBPorts.kext` |
 | 键盘 | ✅ | `VoodooPS2Controller` 2.3.8 |
-| 触控板（I2C HTIX5288） | ❌ | `VoodooI2C`/`VoodooGPIO`/`VoodooI2CHID` 已加载但不上报多点触控，仍在逆向 |
+| 触控板（I2C HTIX5288） | ✅ | 轮询模式工作正常，多点触控/双指缩放可用（`PhxInputCalls` 持续增长）。GPIO 中断模式尚未走通 |
 | USB4 / Thunderbolt | ❌ | NHI `1022:1669`；`AppleThunderboltNHI` 无 x86 可执行文件且只匹配 Intel ID。USB-C 的 USB3 部分仍可用 |
 
 ### 2.6 网络 / 蓝牙
@@ -107,7 +107,7 @@ EFI/
 └── OC/
     ├── ACPI/            # SSDT（EC/USB、PLUG、ENTP、PHXBKL、BAT）
     ├── Drivers/         # OpenRuntime / OpenCanopy / HfsPlus / ResetNvramEntry / apfs_aligned
-    ├── Kexts/           # 30 个 kext（含自研 PhxBringup / PhxXhciKick / PhxGpioProbe）
+    ├── Kexts/           # 30 个 kext（来源见 CREDITS.md）
     ├── Resources/       # OpenCanopy 主题与音频
     ├── Tools/
     ├── OpenCore.efi
@@ -140,7 +140,7 @@ networksetup -getmacaddress en0     # 或 ioreg -l | grep IOMACAddress
 1. **Photo Booth 黑屏**：RADV compute pipeline 崩溃，属显示栈问题，本仓库不含修复。
 2. **内置麦克风**：AMD ACP DMIC 无 macOS 驱动，需自写 ACP 音频驱动。
 3. **USB4**：需独立 AMD NHI 内核驱动，ACPI/SSDT 无法解决。
-4. **触控板**：I2C HID 已加载但无多点触控上报。
+4. **触控板**：轮询模式已可用（含多点触控），GPIO 中断模式尚未打通；当前 `Interrupt Mode` 虽显示 GPIO，实际走轮询兜底。
 5. **三码**：仓库内为空，必须自填；请勿把填好的 config 再提交回公开仓库。
 
 ## 6. 免责声明
@@ -149,7 +149,34 @@ networksetup -getmacaddress en0     # 或 ioreg -l | grep IOMACAddress
 - 刷写 EFI 有变砖风险，请先备份原 EFI 并准备 U 盘救援。
 - 仓库不含任何 Apple 版权文件；`Resources/Audio` 等为 OpenCore 自带资源。
 
-## 7. 致谢
+## 7. 致谢与来源
 
-Acidanthera（OpenCore / Lilu / VirtualSMC / AppleALC / VoodooI2C / VoodooPS2）、
-ChefKiss（NootedRed 思路）、以及各 kext 原作者。
+本仓库的 EFI 不是从零编写，而是站在大量开源项目之上。每个 kext 的上游、许可证和本地改动见 [CREDITS.md](CREDITS.md)。
+
+主要上游：
+
+- **nullarc** — [luuumi-dev/nullarc](https://github.com/luuumi-dev/nullarc)，本机使用 [nerux-real/nullarc-760M](https://github.com/nerux-real/nullarc-760M) 分支构建的 `PhxBringup`（780M 显示加速）
+- **AirportMtkWlan** — [Arxusion/AirportMtkWlan](https://github.com/Arxusion/AirportMtkWlan)（GPL-2.0），本机在其基础上做了 3 处修正 + 1 处移植
+- **SimpleHDA / SimpleMtkBtFw / SimpleMtkBtPatcher** — [laobamac](https://github.com/laobamac)（GPL-3.0）
+- **VoodooI2C 全家** — [alexandred/VoodooI2C](https://github.com/alexandred/VoodooI2C)（GPL-3.0），本机分支 [kevin8717/VoodooI2C-htix5288](https://github.com/kevin8717/VoodooI2C-htix5288)
+- **Acidanthera** — OpenCore、Lilu、VirtualSMC、AppleALC、WhateverGreen、RestrictEvents、BrightnessKeys、VoodooPS2、VoodooInput
+- **xHCI ring1 中断思路** — [thanhnndev/ga403wm-hackintosh](https://github.com/thanhnndev/ga403wm-hackintosh) 的 `docs/USB-XHCI-LAG.md`（`ItlXhciKick`），本机按该思路独立实现为 `PhxXhciKick`
+- **NootedRed** — [ChefKissInc/NootedRed](https://github.com/ChefKissInc/NootedRed)（本机已禁用，仅保留）
+
+本地自行编写/修改的部分（不声称上游工作）：
+
+| 项目 | 性质 |
+|---|---|
+| `PhxXhciKick.kext` | 按 thanhnndev 文档思路独立实现的 kext |
+| `PhxGpioProbe.kext` | 本地只读诊断探针 |
+| `SSDT-BAT.aml` | 本地编写（基于原始 DSDT 的电池方法重写） |
+| `SSDT-PHXBKL.aml` | 本地编写（配合 PhxBringup 背光） |
+| `AirportMtkWlan` 修改 | 在 Arxusion 上游基础上改 4 个文件 |
+| `VoodooI2C` / `VoodooGPIO` / `VoodooI2CHID` | 在 alexandred 上游基础上打补丁 |
+
+## 8. 免责声明
+
+- 本项目仅供学习研究。使用 OpenCore 修改 SMBIOS 可能违反 Apple 软件许可协议。
+- 刷写 EFI 有变砖风险，请先备份原 EFI 并准备 U 盘救援。
+- 仓库不含任何 Apple 版权文件；`Resources/Audio` 等为 OpenCore 自带资源。
+- 各 kext 版权归其原作者，许可证以 `CREDITS.md` 为准。
